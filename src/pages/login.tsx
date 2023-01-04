@@ -2,26 +2,28 @@ import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMutation } from "urql";
+import { useMutation, useQuery } from "urql";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
+import { loginMutation } from "../graphql/mutations/login";
 import { registerMutation } from "../graphql/mutations/register";
+// import { useRegisterMutation } from "../generated/graphql";
 import { errorMapper } from "../utils/index";
 
-interface registerProps {}
-
-export const Register: React.FC<registerProps> = () => {
-  const [, register] = useMutation(registerMutation);
+export const Login: React.FC = () => {
+  const [, login] = useMutation(loginMutation);
   const router = useRouter();
   return (
     <Wrapper>
       <Formik
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const resp = await register(values);
-          if (resp.data?.registration.error) {
-            setErrors(errorMapper(resp.data.registration.error));
-          } else if (resp.data?.registration?.user) {
+          const resp = await login({ options: values });
+          console.log("===  resp", resp);
+          if (resp.data?.login.error) {
+            setErrors(errorMapper(resp.data.login.error));
+          } else if (resp.data?.login.user) {
+            console.log("===here", resp);
             router.push("/");
           }
         }}
@@ -58,4 +60,4 @@ export const Register: React.FC<registerProps> = () => {
   );
 };
 
-export default Register;
+export default Login;
