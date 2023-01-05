@@ -1,14 +1,14 @@
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
+import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMutation, useQuery } from "urql";
+import { useMutation } from "urql";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { loginMutation } from "../graphql/mutations/login";
-import { registerMutation } from "../graphql/mutations/register";
-// import { useRegisterMutation } from "../generated/graphql";
 import { errorMapper } from "../utils/index";
+import { urqlClient } from "../utils/urqlClient";
 
 export const Login: React.FC = () => {
   const [, login] = useMutation(loginMutation);
@@ -19,11 +19,9 @@ export const Login: React.FC = () => {
         initialValues={{ username: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           const resp = await login({ options: values });
-          console.log("===  resp", resp);
           if (resp.data?.login.error) {
             setErrors(errorMapper(resp.data.login.error));
           } else if (resp.data?.login.user) {
-            console.log("===here", resp);
             router.push("/");
           }
         }}
@@ -60,4 +58,4 @@ export const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default withUrqlClient(urqlClient)(Login);

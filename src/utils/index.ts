@@ -8,3 +8,5 @@ export const errorMapper = (errors: FieldError[]) => {
 
   return errorMap;
 };
+
+export const isServer = () => typeof window === "undefined";
