@@ -1,6 +1,6 @@
 import { graphql } from "../../generated";
 export const loginMutation = graphql(`
-  mutation Login($options: UsernamePasswordInput!) {
+  mutation Login($options: LoginInput!) {
     login(options: $options) {
       error {
         message

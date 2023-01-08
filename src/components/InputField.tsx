@@ -23,7 +23,7 @@ const InputField = ({ size, ...props }: Props) => {
         id={field.name}
         placeholder={props.placeholder}
       />
-      {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
+      <FormErrorMessage>{error}</FormErrorMessage>
     </FormControl>
   );
 };
