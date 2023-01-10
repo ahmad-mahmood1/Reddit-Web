@@ -8,7 +8,7 @@ import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { registerMutation } from "../graphql/mutations/register";
 import { errorMapper } from "../utils/index";
-import { urqlClient } from "../utils/urqlClient";
+import { urqlClient } from "../utils/urql/urqlClient";
 
 interface registerProps {}
 
@@ -20,9 +20,7 @@ export const Register: React.FC<registerProps> = () => {
       <Formik
         initialValues={{ username: "", password: "", email: "" }}
         onSubmit={async (values, { setErrors }) => {
-          console.log("===  values", values);
           const resp = await register(values);
-          console.log("===  resp", resp);
           if (resp.data?.registeration.error) {
             setErrors(errorMapper(resp.data.registeration.error));
           } else if (resp.data?.registeration?.user) {

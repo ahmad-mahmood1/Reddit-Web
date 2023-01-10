@@ -1,12 +1,14 @@
 import { cacheExchange } from "@urql/exchange-graphcache";
-import { dedupExchange, fetchExchange } from "urql";
+import Router from "next/router";
+import { dedupExchange, fetchExchange, mapExchange } from "urql";
 import {
   LoggedInUserDocument,
   LoggedInUserQuery,
   LoginMutation,
   LogoutMutation,
   RegisterMutation,
-} from "../generated/graphql";
+} from "../../generated/graphql";
+import { cursorPagination } from "./cursorPagination";
 import { updateCache } from "./updateQuery";
 
 export const urqlClient = (ssrExchange: any) => {
@@ -17,7 +19,22 @@ export const urqlClient = (ssrExchange: any) => {
     },
     exchanges: [
       dedupExchange,
+      mapExchange({
+        onError(error, operation) {
+          if (error.message.includes("Not Authenticated")) {
+            Router.replace("/login");
+          }
+        },
+      }),
       cacheExchange({
+        resolvers: {
+          keys: {
+            PaginatedPosts: () => null,
+          },
+          Query: {
+            posts: cursorPagination(),
+          },
+        },
         updates: {
           Mutation: {
             logout: (_result, args, cache, info) => {

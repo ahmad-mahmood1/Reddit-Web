@@ -6,7 +6,7 @@ import { useMutation } from "urql";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { forgotPassword } from "../graphql/mutations/forgotPassword";
-import { urqlClient } from "../utils/urqlClient";
+import { urqlClient } from "../utils/urql/urqlClient";
 
 type Props = {};
 

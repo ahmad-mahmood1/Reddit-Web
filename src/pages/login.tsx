@@ -9,7 +9,7 @@ import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { loginMutation } from "../graphql/mutations/login";
 import { errorMapper } from "../utils/index";
-import { urqlClient } from "../utils/urqlClient";
+import { urqlClient } from "../utils/urql/urqlClient";
 export const Login: React.FC = () => {
   const [, login] = useMutation(loginMutation);
   const router = useRouter();
@@ -22,7 +22,9 @@ export const Login: React.FC = () => {
           if (resp.data?.login.error) {
             setErrors(errorMapper(resp.data.login.error));
           } else if (resp.data?.login.user) {
-            router.push("/");
+            router.query.next
+              ? router.push(`${router.query.next}`)
+              : router.push("/");
           }
         }}
       >
@@ -43,10 +45,10 @@ export const Login: React.FC = () => {
                 type={"password"}
               />
             </Box>
-            <Flex flexDirection={"row-reverse"} mt={2}>
-              <NextLink href="/forgot-password">
-                <Link mr={"auto"}>Forgot Password?</Link>
-              </NextLink>
+            <Flex flex={"row"} flexDirection={"row-reverse"} mt={2}>
+              <Link as={NextLink} href="/forgot-password">
+                Forgot Password?
+              </Link>
             </Flex>
             <Button
               mt={4}

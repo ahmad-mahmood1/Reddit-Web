@@ -1,12 +1,19 @@
 import { graphql } from "../../generated";
 
-export const posts = graphql(`
-  query Posts {
-    posts {
-      id
-      title
-      createdAt
-      updatedAt
+export const postsQuery = graphql(`
+  query Posts($limit: Int!, $cursor: String) {
+    posts(limit: $limit, cursor: $cursor) {
+      posts {
+        id
+        title
+        text
+        points
+        creatorId
+        textSnippet
+        createdAt
+        updatedAt
+      }
+      hasMore
     }
   }
 `);

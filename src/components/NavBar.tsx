@@ -13,7 +13,6 @@ type Props = {
 
 export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
   const loggedInUser = useFragment(loggedInUserFragment, user?.me);
-  console.log("===  loggedInUser", loggedInUser);
   const [{ fetching: logoutLoading }, logout] = useMutation(logoutUser);
   const body = !loggedInUser ? (
     <>

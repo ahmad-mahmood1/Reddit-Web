@@ -18,9 +18,9 @@ import InputField from "../../components/InputField";
 import Wrapper from "../../components/Wrapper";
 import { changePassword } from "../../graphql/mutations/changePassword";
 import { errorMapper } from "../../utils";
-import { urqlClient } from "../../utils/urqlClient";
+import { urqlClient } from "../../utils/urql/urqlClient";
 
-const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
+const ChangePassword: NextPage = () => {
   const [, setNewPassword] = useMutation(changePassword);
   const [tokenError, setTokenError] = useState<any | null>(null);
   const router = useRouter();
@@ -30,7 +30,8 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
         initialValues={{ newPassword: "" }}
         onSubmit={async (values, { setErrors }) => {
           const resp = await setNewPassword({
-            token,
+            token:
+              typeof router.query.token === "string" ? router.query.token : "",
             newPassword: values.newPassword,
           });
           if (resp.data?.changePassword.error) {
@@ -59,9 +60,13 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
                 <AlertDescription>
                   <Flex>
                     <Box>{tokenError}--</Box>
-                    <NextLink href="/forgot-password">
-                      <Link color={"cyan.700"}>Forgot Password?</Link>
-                    </NextLink>
+                    <Link
+                      as={NextLink}
+                      href="/forgotPassword"
+                      color={"cyan.700"}
+                    >
+                      Forgot Password?
+                    </Link>
                   </Flex>
                 </AlertDescription>
               </Alert>
@@ -79,10 +84,6 @@ const ChangePassword: NextPage<{ token: string }> = ({ token }) => {
       </Formik>
     </Wrapper>
   );
-};
-
-ChangePassword.getInitialProps = ({ query }) => {
-  return { token: query.token as string };
 };
 
 export default withUrqlClient(urqlClient)(ChangePassword);

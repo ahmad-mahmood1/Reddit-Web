@@ -5,11 +5,9 @@ import theme from "../theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    // <Provider value={client}>
     <ChakraProvider theme={theme}>
       <Component {...pageProps} />
     </ChakraProvider>
-    // </Provider>
   );
 }
 
