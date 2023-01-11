@@ -1,5 +1,6 @@
-import { Box, Button, Flex, Link } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { useMutation } from "urql";
 import { useFragment } from "../generated";
@@ -13,6 +14,7 @@ type Props = {
 
 export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
   const loggedInUser = useFragment(loggedInUserFragment, user?.me);
+  const router = useRouter();
   const [{ fetching: logoutLoading }, logout] = useMutation(logoutUser);
   const body = !loggedInUser ? (
     <>
@@ -20,26 +22,35 @@ export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
         Login
       </Link>
       <Link as={NextLink} href="/register">
-        Registration
+        Register
       </Link>
     </>
   ) : (
-    <Flex>
-      <Box mr={2}>{loggedInUser?.username}</Box>
+    <Flex align="center">
+      <Button as={NextLink} href="/createPost" mr={4}>
+        create post
+      </Button>
+      <Box mr={2}>{loggedInUser.username}</Box>
       <Button
-        variant={"link"}
-        onClick={() => {
-          logout({});
+        onClick={async () => {
+          await logout({});
+          router.reload();
         }}
         isLoading={logoutLoading}
+        variant="link"
       >
         Logout
       </Button>
     </Flex>
   );
   return (
-    <Flex bg={"tan"} p={4} minH={10}>
-      <Box ml={"auto"}>{body}</Box>
+    <Flex zIndex={1} position="sticky" top={0} bg="tan" p={4}>
+      <Flex flex={1} justify={"space-between"} align="center">
+        <Link as={NextLink} href="/">
+          <Heading>AiReddit</Heading>
+        </Link>
+        <Box>{body}</Box>
+      </Flex>
     </Flex>
   );
 };

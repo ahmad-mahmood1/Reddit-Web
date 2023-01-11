@@ -24,7 +24,7 @@ const CreatePost = (props: Props) => {
   const [, makePost] = useMutation(createPostMutation);
 
   return (
-    <Wrapper>
+    <Wrapper variant="small">
       <Formik
         initialValues={{ title: "", text: "" }}
         onSubmit={async (values, { setErrors }) => {
