@@ -16,8 +16,6 @@ const Post = ({}) => {
       id: intId,
     },
   });
-  console.log("===  data", data);
-
   if (fetching) {
     return (
       <Layout>

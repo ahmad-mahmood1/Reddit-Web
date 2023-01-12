@@ -9,6 +9,7 @@ import {
   LogoutMutation,
   MutationDeletePostArgs,
   RegisterMutation,
+  VoteMutation,
   VoteMutationVariables,
 } from "../../generated/graphql";
 import { cursorPagination } from "./cursorPagination";
@@ -48,9 +49,7 @@ export const urqlClient = (ssrExchange: any, ctx: any) => {
       }),
       cacheExchange({
         resolvers: {
-          keys: {
-            PaginatedPosts: () => null,
-          },
+          keys: {},
           Query: {
             posts: cursorPagination(),
           },
@@ -62,36 +61,6 @@ export const urqlClient = (ssrExchange: any, ctx: any) => {
                 __typename: "Post",
                 id: (args as MutationDeletePostArgs).id,
               });
-            },
-            vote: (_result, args, cache, info) => {
-              const { postId, value } = args as VoteMutationVariables;
-              const data = cache.readFragment(
-                gql`
-                  fragment _ on Post {
-                    id
-                    points
-                    voteStatus
-                  }
-                `,
-                { id: postId } as any
-              );
-
-              if (data) {
-                if (data.voteStatus === value) {
-                  return;
-                }
-                const newPoints =
-                  (data.points as number) + (!data.voteStatus ? 1 : 2) * value;
-                cache.writeFragment(
-                  gql`
-                    fragment __ on Post {
-                      points
-                      voteStatus
-                    }
-                  `,
-                  { id: postId, points: newPoints, voteStatus: value } as any
-                );
-              }
             },
             createPost: (_result, args, cache, info) => {
               invalidateAllPosts(cache);
@@ -128,6 +97,7 @@ export const urqlClient = (ssrExchange: any, ctx: any) => {
                   }
                 }
               );
+              invalidateAllPosts(cache);
             },
 
             registeration: (_result, args, cache, info) => {

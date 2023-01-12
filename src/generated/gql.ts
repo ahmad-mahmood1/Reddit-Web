@@ -23,7 +23,7 @@ const documents = {
     "\n    mutation Logout {\n      logout\n    }\n  ": types.LogoutDocument,
     "\n  mutation Register($username: String!, $password: String!, $email: String!) {\n    registeration(\n      options: { username: $username, password: $password, email: $email }\n    ) {\n      error {\n        message\n        field\n      }\n      user {\n        ...LoggedInUser\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation UpdatePost($id: Int!, $title: String!, $text: String!) {\n    updatePost(id: $id, title: $title, text: $text) {\n      id\n      title\n      text\n      textSnippet\n    }\n  }\n": types.UpdatePostDocument,
-    "\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId)\n  }\n": types.VoteDocument,
+    "\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId) {\n      post {\n        id\n        voteStatus\n        points\n      }\n    }\n  }\n": types.VoteDocument,
     "\n  query loggedInUser {\n    me {\n      ...LoggedInUser\n    }\n  }\n": types.LoggedInUserDocument,
     "\n  query Post($id: Int!) {\n    post(id: $id) {\n      id\n      createdAt\n      updatedAt\n      title\n      points\n      text\n      voteStatus\n      creator {\n        id\n        username\n        email\n      }\n    }\n  }\n": types.PostDocument,
     "\n  query Posts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n    }\n  }\n": types.PostsDocument,
@@ -72,7 +72,7 @@ export function graphql(source: "\n  mutation UpdatePost($id: Int!, $title: Stri
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId)\n  }\n"): (typeof documents)["\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId)\n  }\n"];
+export function graphql(source: "\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId) {\n      post {\n        id\n        voteStatus\n        points\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId) {\n      post {\n        id\n        voteStatus\n        points\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
