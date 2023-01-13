@@ -9,7 +9,7 @@ import { deletePostMutation } from "../graphql/mutations/deletePost";
 import { currentUser } from "../graphql/queries/me";
 
 interface EditDeletePostButtonsProps {
-  id: number;
+  id?: number;
   creatorId: number;
 }
 
@@ -39,7 +39,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
         icon={<DeleteIcon />}
         aria-label="Delete Post"
         onClick={() => {
-          onDelete({ id });
+          onDelete({ id: id as number });
         }}
         colorScheme={"red"}
       />

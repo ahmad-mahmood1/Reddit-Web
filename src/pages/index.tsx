@@ -1,4 +1,3 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -8,7 +7,6 @@ import {
   CardHeader,
   Flex,
   Heading,
-  IconButton,
   Link,
   Spacer,
   Stack,
@@ -47,12 +45,10 @@ const Index = () => {
     data?.posts.posts[data.posts.posts.length - 1]
   );
 
-  const [{ data: user, fetching }] = useQuery({
+  const [{ data: user }] = useQuery({
     query: currentUser,
   });
   const loggedInUser = useFragment(LoggedInUserFragmentDoc, user?.me);
-
-  const [, onDelete] = useMutation(deletePostMutation);
 
   if (!fetchingPosts && !data) {
     return <div>No Data</div>;
@@ -60,8 +56,6 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* <NavBar user={user} loading={fetching} /> */}
-
       {!data && fetchingPosts ? (
         <div>Loading...</div>
       ) : (
@@ -96,7 +90,7 @@ const Index = () => {
                           </Text>
                           <Spacer />
                           <EditDeletePostButtons
-                            id={loggedInUser!.id}
+                            id={loggedInUser?.id}
                             creatorId={post.creator.id}
                           />
                         </Flex>
