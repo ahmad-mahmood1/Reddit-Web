@@ -19,6 +19,7 @@ import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useState } from "react";
 import { useMutation, useQuery } from "urql";
+import { EditDeletePostButtons } from "../components/EditDeletePostsButton";
 import { Layout } from "../components/Layout";
 import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
@@ -94,29 +95,10 @@ const Index = () => {
                             )}
                           </Text>
                           <Spacer />
-                          {loggedInUser?.id === post.creator.id && (
-                            <Flex>
-                              <NextLink
-                                href="/post/edit/[id]"
-                                as={`/post/edit/${post.id}`}
-                              >
-                                <IconButton
-                                  mr={4}
-                                  icon={<EditIcon />}
-                                  aria-label="Edit Post"
-                                  colorScheme={"green"}
-                                />
-                              </NextLink>
-                              <IconButton
-                                icon={<DeleteIcon />}
-                                colorScheme={"red"}
-                                aria-label="Delete Post"
-                                onClick={() => {
-                                  onDelete({ id: post.id });
-                                }}
-                              />
-                            </Flex>
-                          )}
+                          <EditDeletePostButtons
+                            id={loggedInUser!.id}
+                            creatorId={post.creator.id}
+                          />
                         </Flex>
                       </CardFooter>
                     </Box>
