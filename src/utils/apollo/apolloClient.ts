@@ -1,8 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { withApollo } from "next-apollo";
 import { PaginatedPosts } from "../../generated/graphql";
-import { setContext } from "@apollo/client/link/context";
-// import withApollo from "./withApollo";
 import { NextPageContext } from "next";
 
 const httpLink = createHttpLink({
@@ -10,11 +8,16 @@ const httpLink = createHttpLink({
   credentials: "include",
 });
 
-const apolloClient = (ctx: NextPageContext | undefined) =>
-  new ApolloClient({
+const apolloClient = (ctx: NextPageContext | undefined) => {
+  return new ApolloClient({
     link: httpLink,
     credentials: "include",
-    ssrMode: true,
+    headers: {
+      cookie:
+        (typeof window === "undefined"
+          ? ctx?.req?.headers.cookie
+          : undefined) || "",
+    },
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
@@ -36,5 +39,6 @@ const apolloClient = (ctx: NextPageContext | undefined) =>
       },
     }),
   });
+};
 
 export default withApollo(apolloClient);

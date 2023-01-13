@@ -21,7 +21,7 @@ import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
 import { PostSnippetFragmentDoc } from "../generated/graphql";
 import { postsQuery } from "../graphql/queries/posts";
-import apolloClient from "../utils/apollo/apolloClient";
+import withApollo from "../utils/apollo/apolloClient";
 
 const Index = () => {
   const {
@@ -118,4 +118,4 @@ const Index = () => {
   );
 };
 
-export default apolloClient({ ssr: true })(Index);
+export default withApollo({ ssr: true })(Index);
