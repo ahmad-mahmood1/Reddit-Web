@@ -9,6 +9,7 @@
     "dev.gql": "npm-run-all -p -r watchgql dev"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.3",
     "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.2.1",
     "@chakra-ui/theme-tools": "^2.0.2",
@@ -21,6 +22,7 @@
     "graphql": "^16.6.0",
     "moment": "^2.29.4",
     "next": "latest",
+    "next-apollo": "^5.0.8",
     "next-urql": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,8 +1,8 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Box, IconButton } from "@chakra-ui/react";
 import NextLink from "next/link";
 import React from "react";
-import { useMutation, useQuery } from "urql";
 import { useFragment } from "../generated/fragment-masking";
 import { LoggedInUserFragmentDoc } from "../generated/graphql";
 import { deletePostMutation } from "../graphql/mutations/deletePost";
@@ -17,9 +17,9 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   id,
   creatorId,
 }) => {
-  const [{ data: meData }] = useQuery({ query: currentUser });
+  const { data: meData } = useQuery(currentUser);
   const loggedInUser = useFragment(LoggedInUserFragmentDoc, meData?.me);
-  const [, onDelete] = useMutation(deletePostMutation);
+  const [onDelete] = useMutation(deletePostMutation);
 
   if (loggedInUser?.id !== creatorId) {
     return null;
@@ -39,7 +39,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
         icon={<DeleteIcon />}
         aria-label="Delete Post"
         onClick={() => {
-          onDelete({ id });
+          onDelete({ variables: { id } });
         }}
         colorScheme={"red"}
       />

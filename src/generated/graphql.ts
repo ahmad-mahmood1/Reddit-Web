@@ -96,7 +96,7 @@ export type Post = {
   creator: User;
   creatorId: Scalars['Float'];
   id: Scalars['Float'];
-  points: Scalars['Float'];
+  points?: Maybe<Scalars['Int']>;
   text: Scalars['String'];
   textSnippet: Scalars['String'];
   title: Scalars['String'];
@@ -157,7 +157,7 @@ export type UserResponse = {
 
 export type LoggedInUserFragment = { __typename?: 'User', id: number, username: string, email: string } & { ' $fragmentName'?: 'LoggedInUserFragment' };
 
-export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string, email: string } } & { ' $fragmentName'?: 'PostSnippetFragment' };
+export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, points?: number | null, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string, email: string } } & { ' $fragmentName'?: 'PostSnippetFragment' };
 
 export type ChangePasswordMutationVariables = Exact<{
   token: Scalars['String'];
@@ -233,7 +233,7 @@ export type VoteMutationVariables = Exact<{
 }>;
 
 
-export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'PostResponse', post?: { __typename?: 'Post', id: number, voteStatus?: number | null, points: number } | null } };
+export type VoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'PostResponse', post?: { __typename?: 'Post', id: number, voteStatus?: number | null, points?: number | null } | null } };
 
 export type LoggedInUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -248,7 +248,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, points: number, text: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string, email: string } } | null };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: number, createdAt: any, updatedAt: any, title: string, points?: number | null, text: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string, email: string } } | null };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];

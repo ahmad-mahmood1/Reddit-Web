@@ -1,6 +1,6 @@
 import { graphql } from "../../generated";
 
-export const loggedInUserFragment = graphql(
+export const postSnippet = graphql(
   `
     fragment PostSnippet on Post {
       id

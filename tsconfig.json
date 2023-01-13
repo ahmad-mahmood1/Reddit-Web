@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/utils/apollo/createApolloClient.ts"  ],
   "exclude": [
     "node_modules"
   ]

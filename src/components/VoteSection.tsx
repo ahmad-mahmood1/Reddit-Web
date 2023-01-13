@@ -1,8 +1,8 @@
-import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Flex, IconButton, Box } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { PostSnippetFragment, PostsQuery } from "../generated/graphql";
-import { useMutation } from "urql";
+import { useMutation } from "@apollo/client";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { Box, Flex, IconButton } from "@chakra-ui/react";
+import { useState } from "react";
+import { PostSnippetFragment } from "../generated/graphql";
 import { vote } from "../graphql/mutations/vote";
 
 type Props = {
@@ -13,7 +13,7 @@ const VoteSection = ({ post }: Props) => {
   const [loadingState, setLoadingState] = useState<
     "updoot-loading" | "downdoot-loading" | "not-loading"
   >("not-loading");
-  const [_, update] = useMutation(vote);
+  const [update] = useMutation(vote);
   return (
     <Flex direction={"column"} justifyContent={"center"} align="center" ml="4">
       <IconButton
@@ -23,8 +23,7 @@ const VoteSection = ({ post }: Props) => {
           }
           setLoadingState("updoot-loading");
           await update({
-            postId: post.id,
-            value: 1,
+            variables: { postId: post.id, value: 1 },
           });
           setLoadingState("not-loading");
         }}
@@ -41,8 +40,7 @@ const VoteSection = ({ post }: Props) => {
           }
           setLoadingState("downdoot-loading");
           await update({
-            postId: post.id,
-            value: -1,
+            variables: { postId: post.id, value: -1 },
           });
           setLoadingState("not-loading");
         }}

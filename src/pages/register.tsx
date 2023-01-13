@@ -1,26 +1,35 @@
+import { useMutation } from "@apollo/client";
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
-import React from "react";
-import { useMutation } from "urql";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
+import { LoggedInUserDocument, LoggedInUserQuery } from "../generated/graphql";
 import { registerMutation } from "../graphql/mutations/register";
+import apolloClient from "../utils/apollo/apolloClient";
 import { errorMapper } from "../utils/index";
-import { urqlClient } from "../utils/urql/urqlClient";
 
-interface registerProps {}
-
-export const Register: React.FC<registerProps> = () => {
-  const [, register] = useMutation(registerMutation);
+export const Register = () => {
+  const [register] = useMutation(registerMutation);
   const router = useRouter();
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ username: "", password: "", email: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const resp = await register(values);
+          const resp = await register({
+            variables: values,
+
+            update: (cache, { data }) => {
+              cache.writeQuery<LoggedInUserQuery>({
+                query: LoggedInUserDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.registeration?.user,
+                },
+              });
+            },
+          });
           if (resp.data?.registeration.error) {
             setErrors(errorMapper(resp.data.registeration.error));
           } else if (resp.data?.registeration?.user) {
@@ -68,4 +77,4 @@ export const Register: React.FC<registerProps> = () => {
   );
 };
 
-export default withUrqlClient(urqlClient)(Register);
+export default apolloClient({ ssr: false })(Register);

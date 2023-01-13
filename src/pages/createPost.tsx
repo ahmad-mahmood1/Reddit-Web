@@ -1,34 +1,32 @@
+import { useMutation, useQuery } from "@apollo/client";
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useMutation, useQuery } from "urql";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { createPostMutation } from "../graphql/mutations/createPost";
 import { currentUser } from "../graphql/queries/me";
 import { errorMapper } from "../utils";
+import apolloClient from "../utils/apollo/apolloClient";
 import { urqlClient } from "../utils/urql/urqlClient";
-type Props = {};
 
-const CreatePost = (props: Props) => {
+const CreatePost = () => {
   const router = useRouter();
-  const [{ data: user, fetching }] = useQuery({
-    query: currentUser,
-  });
+  const { data: user, loading } = useQuery(currentUser);
   useEffect(() => {
-    !fetching && !user?.me && router.push("/login?next=/createPost");
+    !loading && !user?.me && router.push("/login?next=/createPost");
   }, []);
 
-  const [, makePost] = useMutation(createPostMutation);
+  const [makePost] = useMutation(createPostMutation);
 
   return (
     <Wrapper variant="small">
       <Formik
         initialValues={{ title: "", text: "" }}
         onSubmit={async (values, { setErrors }) => {
-          const resp = await makePost({ options: values });
+          const resp = await makePost({ variables: { options: values } });
           if (resp.data?.createPost.error) {
             setErrors(errorMapper(resp.data?.createPost.error));
           }
@@ -67,4 +65,4 @@ const CreatePost = (props: Props) => {
   );
 };
 
-export default withUrqlClient(urqlClient)(CreatePost);
+export default apolloClient({ ssr: false })(CreatePost);

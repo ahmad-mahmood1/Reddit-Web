@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { useQuery } from "@apollo/client";
 import {
   Box,
   Button,
@@ -8,37 +8,30 @@ import {
   CardHeader,
   Flex,
   Heading,
-  IconButton,
   Link,
   Spacer,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
-import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
-import { useState } from "react";
-import { useMutation, useQuery } from "urql";
+import { EditDeletePostButtons } from "../components/EditDeletePostsButton";
 import { Layout } from "../components/Layout";
 import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
-import {
-  LoggedInUserFragmentDoc,
-  PostSnippetFragmentDoc,
-  PostsQueryVariables,
-} from "../generated/graphql";
-import { deletePostMutation } from "../graphql/mutations/deletePost";
-import { currentUser } from "../graphql/queries/me";
+import { PostSnippetFragmentDoc } from "../generated/graphql";
 import { postsQuery } from "../graphql/queries/posts";
-import { urqlClient } from "../utils/urql/urqlClient";
+import apolloClient from "../utils/apollo/apolloClient";
 
 const Index = () => {
-  const [variables, setQueryVariables] = useState<PostsQueryVariables>({
-    limit: 10,
-  });
-  const [{ data, fetching: fetchingPosts }] = useQuery({
-    query: postsQuery,
-    variables,
+  const {
+    data,
+    loading: fetchingPosts,
+    refetch,
+  } = useQuery(postsQuery, {
+    variables: {
+      limit: 10,
+    },
   });
 
   const lastPost = useFragment(
@@ -46,21 +39,15 @@ const Index = () => {
     data?.posts.posts[data.posts.posts.length - 1]
   );
 
-  const [{ data: user, fetching }] = useQuery({
-    query: currentUser,
-  });
-  const loggedInUser = useFragment(LoggedInUserFragmentDoc, user?.me);
-
-  const [, onDelete] = useMutation(deletePostMutation);
-
   if (!fetchingPosts && !data) {
     return <div>No Data</div>;
   }
 
+  // const qid = localStorage.getItem("qid");
+  // console.log("===  qid", qid);
+
   return (
     <Layout>
-      {/* <NavBar user={user} loading={fetching} /> */}
-
       {!data && fetchingPosts ? (
         <div>Loading...</div>
       ) : (
@@ -94,29 +81,12 @@ const Index = () => {
                             )}
                           </Text>
                           <Spacer />
-                          {loggedInUser?.id === post.creator.id && (
-                            <Flex>
-                              <NextLink
-                                href="/post/edit/[id]"
-                                as={`/post/edit/${post.id}`}
-                              >
-                                <IconButton
-                                  mr={4}
-                                  icon={<EditIcon />}
-                                  aria-label="Edit Post"
-                                  colorScheme={"green"}
-                                />
-                              </NextLink>
-                              <IconButton
-                                icon={<DeleteIcon />}
-                                colorScheme={"red"}
-                                aria-label="Delete Post"
-                                onClick={() => {
-                                  onDelete({ id: post.id });
-                                }}
-                              />
-                            </Flex>
-                          )}
+                          <Box ml="auto">
+                            <EditDeletePostButtons
+                              id={post.id}
+                              creatorId={post.creator.id}
+                            />
+                          </Box>
                         </Flex>
                       </CardFooter>
                     </Box>
@@ -132,8 +102,8 @@ const Index = () => {
         <Flex>
           <Button
             onClick={() => {
-              setQueryVariables({
-                ...variables,
+              refetch({
+                limit: 10,
                 cursor: lastPost?.createdAt,
               });
             }}
@@ -148,4 +118,4 @@ const Index = () => {
   );
 };
 
-export default withUrqlClient(urqlClient, { ssr: true })(Index);
+export default apolloClient({ ssr: true })(Index);

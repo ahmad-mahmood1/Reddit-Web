@@ -1,8 +1,8 @@
+import { useApolloClient, useMutation } from "@apollo/client";
 import { Box, Button, Flex, Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMutation } from "urql";
 import { useFragment } from "../generated";
 import { LoggedInUserQuery } from "../generated/graphql";
 import { loggedInUserFragment } from "../graphql/fragments/loggedInUser";
@@ -14,8 +14,8 @@ type Props = {
 
 export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
   const loggedInUser = useFragment(loggedInUserFragment, user?.me);
-  const router = useRouter();
-  const [{ fetching: logoutLoading }, logout] = useMutation(logoutUser);
+  const apolloClient = useApolloClient();
+  const [logout, { loading: logoutLoading }] = useMutation(logoutUser);
   const body = !loggedInUser ? (
     <>
       <Link as={NextLink} mr={2} href="/login">
@@ -33,8 +33,8 @@ export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
       <Box mr={2}>{loggedInUser.username}</Box>
       <Button
         onClick={async () => {
-          await logout({});
-          router.reload();
+          await logout();
+          await apolloClient.resetStore();
         }}
         isLoading={logoutLoading}
         variant="link"

@@ -1,17 +1,14 @@
+import { useMutation } from "@apollo/client";
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { withUrqlClient } from "next-urql";
-import React, { useState } from "react";
-import { useMutation } from "urql";
+import { useState } from "react";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { forgotPassword } from "../graphql/mutations/forgotPassword";
-import { urqlClient } from "../utils/urql/urqlClient";
+import apolloClient from "../utils/apollo/apolloClient";
 
-type Props = {};
-
-const ForgotPassword: React.FC = (props: Props) => {
-  const [, sendForgotPasswordEmail] = useMutation(forgotPassword);
+const ForgotPassword = () => {
+  const [sendForgotPasswordEmail] = useMutation(forgotPassword);
   const [formComplete, setFormComplete] = useState(false);
   return (
     <Wrapper>
@@ -21,7 +18,9 @@ const ForgotPassword: React.FC = (props: Props) => {
         <Formik
           initialValues={{ email: "" }}
           onSubmit={async (values, { setErrors }) => {
-            const resp = await sendForgotPasswordEmail({ email: values.email });
+            const resp = await sendForgotPasswordEmail({
+              variables: { email: values.email },
+            });
             setFormComplete(true);
           }}
         >
@@ -50,4 +49,4 @@ const ForgotPassword: React.FC = (props: Props) => {
   );
 };
 
-export default withUrqlClient(urqlClient)(ForgotPassword);
+export default apolloClient({ ssr: false })(ForgotPassword);

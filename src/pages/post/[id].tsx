@@ -1,22 +1,22 @@
 import { withUrqlClient } from "next-urql";
 import { Box, Heading } from "@chakra-ui/react";
-import { useQuery } from "urql";
 import { EditDeletePostButtons } from "../../components/EditDeletePostsButton";
 import { Layout } from "../../components/Layout";
 import { postQuery } from "../../graphql/queries/post";
 import { useGetIntId } from "../../utils";
 import { urqlClient } from "../../utils/urql/urqlClient";
+import { useQuery } from "@apollo/client";
+import apolloClient from "../../utils/apollo/apolloClient";
 
-const Post = ({}) => {
+const Post = () => {
   const intId = useGetIntId();
-  const [{ data, error, fetching }] = useQuery({
-    query: postQuery,
-    pause: intId === -1,
+  const { data, error, loading } = useQuery(postQuery, {
+    skip: intId === -1,
     variables: {
       id: intId,
     },
   });
-  if (fetching) {
+  if (loading) {
     return (
       <Layout>
         <div>loading...</div>
@@ -48,4 +48,4 @@ const Post = ({}) => {
   );
 };
 
-export default withUrqlClient(urqlClient, { ssr: true })(Post);
+export default apolloClient({ ssr: true })(Post);

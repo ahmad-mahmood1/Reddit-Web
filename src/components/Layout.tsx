@@ -1,5 +1,5 @@
+import { useQuery } from "@apollo/client";
 import React, { ReactNode } from "react";
-import { useQuery } from "urql";
 import { currentUser } from "../graphql/queries/me";
 // import { Wrapper, WrapperVariant } from "./Wrapper";
 import { NavBar } from "./NavBar";
@@ -11,12 +11,10 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
-  const [{ data: user, fetching }] = useQuery({
-    query: currentUser,
-  });
+  const { data: user, loading } = useQuery(currentUser);
   return (
     <>
-      <NavBar user={user} loading={fetching} />
+      <NavBar user={user} loading={loading} />
       <Wrapper variant={variant}>{children}</Wrapper>
     </>
   );
