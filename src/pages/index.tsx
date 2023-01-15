@@ -14,6 +14,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
+import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { EditDeletePostButtons } from "../components/EditDeletePostsButton";
 import { Layout } from "../components/Layout";
@@ -21,30 +22,32 @@ import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
 import { PostSnippetFragmentDoc } from "../generated/graphql";
 import { postsQuery } from "../graphql/queries/posts";
-import withApollo from "../utils/apollo/apolloClient";
+import { addApolloState, initializeApollo } from "../utils/apollo/apolloClient";
+import { currentUser } from "../graphql/queries/me";
 
 const Index = () => {
   const {
     data,
     loading: fetchingPosts,
+    error,
     refetch,
-  } = useQuery(postsQuery, {
-    variables: {
-      limit: 10,
-    },
-  });
+  } = useQuery(postsQuery, { variables: { limit: 10 } });
 
   const lastPost = useFragment(
     PostSnippetFragmentDoc,
     data?.posts.posts[data.posts.posts.length - 1]
   );
 
+  if (error) {
+    return (
+      <>
+        {error.message} {error.networkError?.cause}
+      </>
+    );
+  }
   if (!fetchingPosts && !data) {
     return <div>No Data</div>;
   }
-
-  // const qid = localStorage.getItem("qid");
-  // console.log("===  qid", qid);
 
   return (
     <Layout>
@@ -118,4 +121,12 @@ const Index = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Index);
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const apolloClient = initializeApollo({ ctx });
+  await apolloClient.query({ query: postsQuery, variables: { limit: 10 } });
+  await apolloClient.query({ query: currentUser });
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+};
+export default Index;

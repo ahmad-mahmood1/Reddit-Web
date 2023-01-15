@@ -5,10 +5,9 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
-import { loginMutation } from "../graphql/mutations/login";
-import apolloClient from "../utils/apollo/apolloClient";
-import { errorMapper } from "../utils/index";
 import { LoggedInUserDocument, LoggedInUserQuery } from "../generated/graphql";
+import { loginMutation } from "../graphql/mutations/login";
+import { errorMapper } from "../utils/index";
 export const Login = () => {
   const [login] = useMutation(loginMutation);
   const router = useRouter();
@@ -76,4 +75,4 @@ export const Login = () => {
   );
 };
 
-export default apolloClient({ ssr: false })(Login);
+export default Login;

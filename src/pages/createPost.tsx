@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import InputField from "../components/InputField";
@@ -9,8 +8,6 @@ import Wrapper from "../components/Wrapper";
 import { createPostMutation } from "../graphql/mutations/createPost";
 import { currentUser } from "../graphql/queries/me";
 import { errorMapper } from "../utils";
-import apolloClient from "../utils/apollo/apolloClient";
-import { urqlClient } from "../utils/urql/urqlClient";
 
 const CreatePost = () => {
   const router = useRouter();
@@ -65,4 +62,4 @@ const CreatePost = () => {
   );
 };
 
-export default apolloClient({ ssr: false })(CreatePost);
+export default CreatePost;

@@ -5,7 +5,6 @@ import { useState } from "react";
 import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { forgotPassword } from "../graphql/mutations/forgotPassword";
-import apolloClient from "../utils/apollo/apolloClient";
 
 const ForgotPassword = () => {
   const [sendForgotPasswordEmail] = useMutation(forgotPassword);
@@ -49,4 +48,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default apolloClient({ ssr: false })(ForgotPassword);
+export default ForgotPassword;

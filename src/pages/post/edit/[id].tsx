@@ -1,16 +1,18 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { withUrqlClient } from "next-urql";
+import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import React from "react";
 import InputField from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
 import { updatePostMutation } from "../../../graphql/mutations/updatePost";
+import { currentUser } from "../../../graphql/queries/me";
 import { postQuery } from "../../../graphql/queries/post";
 import { useGetIntId } from "../../../utils";
-import apolloClient from "../../../utils/apollo/apolloClient";
-import { urqlClient } from "../../../utils/urql/urqlClient";
+import {
+  addApolloState,
+  initializeApollo,
+} from "../../../utils/apollo/apolloClient";
 
 const EditPost = () => {
   const router = useRouter();
@@ -68,4 +70,17 @@ const EditPost = () => {
   );
 };
 
-export default apolloClient({ ssr: true })(EditPost);
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const apolloClient = initializeApollo({ ctx });
+
+  if (ctx.query.id) {
+    let id = parseInt(ctx.query.id as string);
+    await apolloClient.query({ query: postQuery, variables: { id } });
+  }
+  await apolloClient.query({ query: currentUser });
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+};
+
+export default EditPost;

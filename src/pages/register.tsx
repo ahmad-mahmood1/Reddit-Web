@@ -6,7 +6,6 @@ import InputField from "../components/InputField";
 import Wrapper from "../components/Wrapper";
 import { LoggedInUserDocument, LoggedInUserQuery } from "../generated/graphql";
 import { registerMutation } from "../graphql/mutations/register";
-import apolloClient from "../utils/apollo/apolloClient";
 import { errorMapper } from "../utils/index";
 
 export const Register = () => {
@@ -77,4 +76,4 @@ export const Register = () => {
   );
 };
 
-export default apolloClient({ ssr: false })(Register);
+export default Register;

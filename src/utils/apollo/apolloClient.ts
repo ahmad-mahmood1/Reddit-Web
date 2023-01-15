@@ -1,16 +1,20 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-import { withApollo } from "next-apollo";
-import { PaginatedPosts } from "../../generated/graphql";
-import { NextPageContext } from "next";
+import {
+  ApolloClient,
+  InMemoryCache,
+  NormalizedCacheObject,
+} from "@apollo/client";
+import merge from "deepmerge";
+import isEqual from "lodash/isEqual";
+import { useMemo } from "react";
 
-const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
-  credentials: "include",
-});
+export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
-const apolloClient = (ctx: NextPageContext | undefined) => {
+let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
+
+function createApolloClient(ctx?: any) {
   return new ApolloClient({
-    link: httpLink,
+    ssrMode: typeof window === "undefined",
+    uri: "http://localhost:4000/graphql",
     credentials: "include",
     headers: {
       cookie:
@@ -18,27 +22,60 @@ const apolloClient = (ctx: NextPageContext | undefined) => {
           ? ctx?.req?.headers.cookie
           : undefined) || "",
     },
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            posts: {
-              keyArgs: [],
-              merge(
-                existing: PaginatedPosts | undefined,
-                incoming: PaginatedPosts
-              ): PaginatedPosts {
-                return {
-                  ...incoming,
-                  posts: [...(existing?.posts || []), ...incoming.posts],
-                };
-              },
-            },
-          },
-        },
-      },
-    }),
+    cache: new InMemoryCache(),
   });
-};
+}
 
-export default withApollo(apolloClient);
+interface InitApollo {
+  initialState?: any;
+  ctx?: any;
+}
+
+export function initializeApollo({ ctx, initialState }: InitApollo) {
+  const _apolloClient = apolloClient ?? createApolloClient(ctx || undefined);
+
+  // If your page has Next.js data fetching methods that use Apollo Client, the initial state
+  // gets hydrated here
+  if (initialState) {
+    // Get existing cache, loaded during client side data fetching
+    const existingCache = _apolloClient.extract();
+
+    // Merge the initialState from getStaticProps/getServerSideProps in the existing cache
+    const data = merge(existingCache, initialState, {
+      // combine arrays using object equality (like in sets)
+      arrayMerge: (destinationArray, sourceArray) => [
+        ...sourceArray,
+        ...destinationArray.filter((d) =>
+          sourceArray.every((s) => !isEqual(d, s))
+        ),
+      ],
+    });
+
+    // Restore the cache with the merged data
+    _apolloClient.cache.restore(data);
+  }
+  // For SSG and SSR always create a new Apollo Client
+  if (typeof window === "undefined") return _apolloClient;
+  // Create the Apollo Client once in the client
+  if (!apolloClient) apolloClient = _apolloClient;
+
+  return _apolloClient;
+}
+
+export function addApolloState(
+  client: ApolloClient<NormalizedCacheObject>,
+  pageProps: { props: any }
+) {
+  pageProps.props[APOLLO_STATE_PROP_NAME] = client.cache.extract();
+
+  return pageProps;
+}
+
+export function useApollo(pageProps: any) {
+  const state = pageProps[APOLLO_STATE_PROP_NAME];
+  const store = useMemo(
+    () => initializeApollo({ initialState: state }),
+    [state]
+  );
+  return store;
+}

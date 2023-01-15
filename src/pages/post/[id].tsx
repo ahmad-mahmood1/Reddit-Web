@@ -1,12 +1,15 @@
-import { withUrqlClient } from "next-urql";
+import { useQuery } from "@apollo/client";
 import { Box, Heading } from "@chakra-ui/react";
+import { GetServerSidePropsContext } from "next";
 import { EditDeletePostButtons } from "../../components/EditDeletePostsButton";
 import { Layout } from "../../components/Layout";
+import { currentUser } from "../../graphql/queries/me";
 import { postQuery } from "../../graphql/queries/post";
 import { useGetIntId } from "../../utils";
-import { urqlClient } from "../../utils/urql/urqlClient";
-import { useQuery } from "@apollo/client";
-import apolloClient from "../../utils/apollo/apolloClient";
+import {
+  addApolloState,
+  initializeApollo,
+} from "../../utils/apollo/apolloClient";
 
 const Post = () => {
   const intId = useGetIntId();
@@ -16,6 +19,7 @@ const Post = () => {
       id: intId,
     },
   });
+
   if (loading) {
     return (
       <Layout>
@@ -48,4 +52,17 @@ const Post = () => {
   );
 };
 
-export default apolloClient({ ssr: true })(Post);
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const apolloClient = initializeApollo({ ctx });
+
+  if (ctx.query.id) {
+    let id = parseInt(ctx.query.id as string);
+    await apolloClient.query({ query: postQuery, variables: { id } });
+  }
+  await apolloClient.query({ query: currentUser });
+  return addApolloState(apolloClient, {
+    props: {},
+  });
+};
+
+export default Post;
