@@ -90,7 +90,7 @@ const Index = () => {
                           </Text>
                           <Spacer />
                           <EditDeletePostButtons
-                            id={loggedInUser?.id}
+                            id={post?.id}
                             creatorId={post.creator.id}
                           />
                         </Flex>
