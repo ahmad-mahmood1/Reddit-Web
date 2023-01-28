@@ -41,6 +41,7 @@ const Index = () => {
   if (error) {
     return (
       <>
+        Error
         {error.message} {error.networkError?.cause}
       </>
     );
