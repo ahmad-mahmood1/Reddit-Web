@@ -23,7 +23,6 @@ import { useFragment } from "../generated/fragment-masking";
 import { PostSnippetFragmentDoc } from "../generated/graphql";
 import { postsQuery } from "../graphql/queries/posts";
 import { addApolloState, initializeApollo } from "../utils/apollo/apolloClient";
-import { currentUser } from "../graphql/queries/me";
 
 const Index = () => {
   const {
