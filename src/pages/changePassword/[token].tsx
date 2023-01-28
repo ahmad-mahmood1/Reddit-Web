@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { NextPage } from "next";
-import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -18,7 +17,6 @@ import InputField from "../../components/InputField";
 import Wrapper from "../../components/Wrapper";
 import { changePassword } from "../../graphql/mutations/changePassword";
 import { errorMapper } from "../../utils";
-import { urqlClient } from "../../utils/urql/urqlClient";
 
 const ChangePassword: NextPage = () => {
   const [, setNewPassword] = useMutation(changePassword);
@@ -86,4 +84,4 @@ const ChangePassword: NextPage = () => {
   );
 };
 
-export default withUrqlClient(urqlClient)(ChangePassword);
+export default ChangePassword;
