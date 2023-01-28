@@ -77,7 +77,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     let id = parseInt(ctx.query.id as string);
     await apolloClient.query({ query: postQuery, variables: { id } });
   }
-  await apolloClient.query({ query: currentUser });
   return addApolloState(apolloClient, {
     props: {},
   });
