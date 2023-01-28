@@ -12,6 +12,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
   const { data: user, loading } = useQuery(currentUser);
+  console.log("===  user", user);
   return (
     <>
       <NavBar user={user} loading={loading} />
