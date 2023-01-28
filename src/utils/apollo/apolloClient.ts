@@ -14,7 +14,7 @@ let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 function createApolloClient(ctx?: any) {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    uri: "http://localhost:4000/graphql",
+    uri: "https://reddit-server-swfi.onrender.com/graphql",
     credentials: "include",
     headers: {
       cookie:
