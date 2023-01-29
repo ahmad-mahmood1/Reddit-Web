@@ -12,6 +12,7 @@ export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
 
 function createApolloClient(ctx?: any) {
+  console.log("request headers", ctx?.req?.headers);
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     uri: `${process.env.NEXT_PUBLIC_API_URL}/graphql`,
