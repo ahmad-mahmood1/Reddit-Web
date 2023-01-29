@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import InputField from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
 import { updatePostMutation } from "../../../graphql/mutations/updatePost";
-import { currentUser } from "../../../graphql/queries/me";
 import { postQuery } from "../../../graphql/queries/post";
 import { useGetIntId } from "../../../utils";
 import {
