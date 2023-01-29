@@ -117,5 +117,4 @@ const Index = () => {
     </Layout>
   );
 };
-
 export default withUrqlClient(urqlClient, { ssr: true })(Index);
