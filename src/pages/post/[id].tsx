@@ -3,7 +3,6 @@ import { Box, Heading } from "@chakra-ui/react";
 import { GetServerSidePropsContext } from "next";
 import { EditDeletePostButtons } from "../../components/EditDeletePostsButton";
 import { Layout } from "../../components/Layout";
-import { currentUser } from "../../graphql/queries/me";
 import { postQuery } from "../../graphql/queries/post";
 import { useGetIntId } from "../../utils";
 import {
