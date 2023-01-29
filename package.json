@@ -9,7 +9,7 @@
     "dev.gql": "npm-run-all -p -r watchgql dev"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.3",
+    "@apollo/client": "^3.7.5",
     "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.2.1",
     "@chakra-ui/theme-tools": "^2.0.2",
