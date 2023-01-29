@@ -47,16 +47,12 @@ const Index = () => {
   const [{ data: user }] = useQuery({
     query: currentUser,
   });
-  const loggedInUser = useFragment(LoggedInUserFragmentDoc, user?.me);
-
-  if (!fetchingPosts && !data) {
-    return <div>No Data</div>;
-  }
-
   return (
     <Layout>
-      {!data && fetchingPosts ? (
+      {fetchingPosts ? (
         <div>Loading...</div>
+      ) : !data ? (
+        <div>No Data</div>
       ) : (
         <Box>
           <Stack spacing={8} direction="column">
