@@ -16,7 +16,7 @@ import moment from "moment";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import { useState } from "react";
-import { useMutation, useQuery } from "urql";
+import { useQuery } from "urql";
 import { EditDeletePostButtons } from "../components/EditDeletePostsButton";
 import { Layout } from "../components/Layout";
 import VoteSection from "../components/VoteSection";
@@ -26,7 +26,6 @@ import {
   PostSnippetFragmentDoc,
   PostsQueryVariables,
 } from "../generated/graphql";
-import { deletePostMutation } from "../graphql/mutations/deletePost";
 import { currentUser } from "../graphql/queries/me";
 import { postsQuery } from "../graphql/queries/posts";
 import { urqlClient } from "../utils/urql/urqlClient";
