@@ -22,7 +22,6 @@ import { Layout } from "../components/Layout";
 import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
 import {
-  LoggedInUserFragmentDoc,
   PostSnippetFragmentDoc,
   PostsQueryVariables,
 } from "../generated/graphql";
