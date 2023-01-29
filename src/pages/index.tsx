@@ -21,6 +21,7 @@ import { Layout } from "../components/Layout";
 import VoteSection from "../components/VoteSection";
 import { useFragment } from "../generated/fragment-masking";
 import { PostSnippetFragmentDoc } from "../generated/graphql";
+import { currentUser } from "../graphql/queries/me";
 import { postsQuery } from "../graphql/queries/posts";
 import { addApolloState, initializeApollo } from "../utils/apollo/apolloClient";
 
@@ -124,6 +125,8 @@ const Index = () => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const apolloClient = initializeApollo({ ctx });
   await apolloClient.query({ query: postsQuery, variables: { limit: 10 } });
+  await apolloClient.query({ query: currentUser });
+
   return addApolloState(apolloClient, {
     props: {},
   });
