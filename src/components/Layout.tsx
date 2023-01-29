@@ -11,9 +11,7 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
-  const { data: user, loading } = useQuery(currentUser, {
-    skip: typeof window === "undefined",
-  });
+  const { data: user, loading } = useQuery(currentUser);
   return (
     <>
       <NavBar user={user} loading={loading} />
