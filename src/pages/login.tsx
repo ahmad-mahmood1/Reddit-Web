@@ -9,7 +9,7 @@ import { LoggedInUserDocument, LoggedInUserQuery } from "../generated/graphql";
 import { loginMutation } from "../graphql/mutations/login";
 import { errorMapper } from "../utils/index";
 export const Login = () => {
-  const [login, { client }] = useMutation(loginMutation);
+  const [login] = useMutation(loginMutation);
   const router = useRouter();
   return (
     <Wrapper variant="small">
@@ -18,19 +18,16 @@ export const Login = () => {
         onSubmit={async (values, { setErrors }) => {
           const resp = await login({
             variables: { options: values },
-            onCompleted: () => {
-              client.resetStore();
+            update: (cache, { data }) => {
+              cache.writeQuery<LoggedInUserQuery>({
+                query: LoggedInUserDocument,
+                data: {
+                  __typename: "Query",
+                  me: data?.login.user,
+                },
+              });
+              cache.evict({ fieldName: "PaginatedPosts" });
             },
-            // update: (cache, { data }) => {
-            //   cache.writeQuery<LoggedInUserQuery>({
-            //     query: LoggedInUserDocument,
-            //     data: {
-            //       __typename: "Query",
-            //       me: data?.login.user,
-            //     },
-            //   });
-            //   cache.evict({ fieldName: "posts:{}" });
-            // },
           });
           if (resp.data?.login.error) {
             setErrors(errorMapper(resp.data.login.error));

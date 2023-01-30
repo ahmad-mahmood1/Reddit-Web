@@ -22,7 +22,13 @@ function createApolloClient(ctx?: any) {
           ? ctx?.req?.headers.cookie
           : undefined) || "",
     },
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        PaginatedPosts: {
+          keyFields: [],
+        },
+      },
+    }),
   });
 }
 
