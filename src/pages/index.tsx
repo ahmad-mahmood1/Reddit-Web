@@ -25,7 +25,7 @@ import { currentUser } from "../graphql/queries/me";
 import { postsQuery } from "../graphql/queries/posts";
 import { addApolloState, initializeApollo } from "../utils/apollo/apolloClient";
 
-const Index = () => {
+const Index = (props: any) => {
   const {
     data,
     loading: fetchingPosts,
@@ -33,6 +33,7 @@ const Index = () => {
     refetch,
   } = useQuery(postsQuery, { variables: { limit: 10 } });
 
+  console.log("===props", props);
   const lastPost = useFragment(
     PostSnippetFragmentDoc,
     data?.posts.posts[data.posts.posts.length - 1]
