@@ -33,7 +33,6 @@ const Index = (props: any) => {
     fetchMore,
   } = useQuery(postsQuery, {
     variables: { limit: 10 },
-    notifyOnNetworkStatusChange: true,
   });
   if (error) {
     return (
@@ -111,7 +110,6 @@ const Index = (props: any) => {
             }}
             m="auto"
             my="8"
-            isLoading={fetchingPosts}
           >
             Load More
           </Button>
