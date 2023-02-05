@@ -121,12 +121,12 @@ const Index = (props: any) => {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const apolloClient = initializeApollo({ ctx });
-  await apolloClient.query({
-    query: postsQuery,
-    variables: { limit: 10 },
-    context: ctx,
-  });
-  await apolloClient.query({ query: currentUser, context: ctx });
+  // await apolloClient.query({
+  //   query: postsQuery,
+  //   variables: { limit: 10 },
+  //   context: ctx,
+  // });
+  // await apolloClient.query({ query: currentUser, context: ctx });
 
   return addApolloState(apolloClient, {
     props: {},
