@@ -30,7 +30,9 @@ export const NavBar: React.FC<Props> = ({ user, loading }: Props) => {
       <Button as={NextLink} href="/createPost" mr={4}>
         create post
       </Button>
-      <Box mr={2}>{loggedInUser.username}</Box>
+      <Box mr={2}>
+        {loggedInUser.username} {loggedInUser.email}
+      </Box>
       <Button
         onClick={async () => {
           await logout();
