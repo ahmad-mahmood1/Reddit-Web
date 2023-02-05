@@ -30,15 +30,11 @@ const Index = (props: any) => {
     data,
     loading: fetchingPosts,
     error,
-    refetch,
-  } = useQuery(postsQuery, { variables: { limit: 10 } });
-
-  console.log("===props", props);
-  const lastPost = useFragment(
-    PostSnippetFragmentDoc,
-    data?.posts.posts[data.posts.posts.length - 1]
-  );
-
+    fetchMore,
+  } = useQuery(postsQuery, {
+    variables: { limit: 10 },
+    notifyOnNetworkStatusChange: true,
+  });
   if (error) {
     return (
       <>
@@ -56,7 +52,7 @@ const Index = (props: any) => {
       {!data && fetchingPosts ? (
         <div>Loading...</div>
       ) : (
-        <Box>
+        <Box mb={!data?.posts.hasMore ? "8" : ""}>
           <Stack spacing={8} direction="column">
             {data?.posts?.posts.map((postObject, i) => {
               const post = useFragment(PostSnippetFragmentDoc, postObject);
@@ -107,13 +103,15 @@ const Index = (props: any) => {
         <Flex>
           <Button
             onClick={() => {
-              refetch({
-                limit: 10,
-                cursor: lastPost?.createdAt,
+              fetchMore({
+                variables: {
+                  cursor: data?.posts?.cursor,
+                },
               });
             }}
             m="auto"
             my="8"
+            isLoading={fetchingPosts}
           >
             Load More
           </Button>

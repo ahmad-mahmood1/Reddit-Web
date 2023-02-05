@@ -26,7 +26,7 @@ const documents = {
     "\n  mutation Vote($value: Int!, $postId: Int!) {\n    vote(value: $value, postId: $postId) {\n      post {\n        id\n        voteStatus\n        points\n      }\n    }\n  }\n": types.VoteDocument,
     "\n  query loggedInUser {\n    me {\n      ...LoggedInUser\n    }\n  }\n": types.LoggedInUserDocument,
     "\n  query Post($id: Int!) {\n    post(id: $id) {\n      id\n      createdAt\n      updatedAt\n      title\n      points\n      text\n      voteStatus\n      creator {\n        id\n        username\n        email\n      }\n    }\n  }\n": types.PostDocument,
-    "\n  query Posts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n    }\n  }\n": types.PostsDocument,
+    "\n  query PaginatedPosts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n      cursor\n    }\n  }\n": types.PaginatedPostsDocument,
 };
 
 /**
@@ -84,7 +84,7 @@ export function graphql(source: "\n  query Post($id: Int!) {\n    post(id: $id) 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Posts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n    }\n  }\n"): (typeof documents)["\n  query Posts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n    }\n  }\n"];
+export function graphql(source: "\n  query PaginatedPosts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n      cursor\n    }\n  }\n"): (typeof documents)["\n  query PaginatedPosts($limit: Int!, $cursor: DateTime) {\n    posts(limit: $limit, cursor: $cursor) {\n      posts {\n        ...PostSnippet\n      }\n      hasMore\n      cursor\n    }\n  }\n"];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

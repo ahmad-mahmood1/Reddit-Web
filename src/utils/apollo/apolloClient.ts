@@ -26,6 +26,15 @@ function createApolloClient(ctx?: any) {
       typePolicies: {
         PaginatedPosts: {
           keyFields: [],
+          fields: {
+            posts: {
+              keyArgs: false,
+              merge(existing, incoming) {
+                const oldPosts = !!existing ? existing : [];
+                return [...oldPosts, ...incoming];
+              },
+            },
+          },
         },
       },
     }),
