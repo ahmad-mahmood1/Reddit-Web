@@ -86,6 +86,7 @@ export type MutationVoteArgs = {
 
 export type PaginatedPosts = {
   __typename?: 'PaginatedPosts';
+  cursor: Scalars['DateTime'];
   hasMore: Scalars['Boolean'];
   posts: Array<Post>;
 };
