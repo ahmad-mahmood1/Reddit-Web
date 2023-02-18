@@ -1,6 +1,6 @@
 import { Cache, cacheExchange } from "@urql/exchange-graphcache";
 import Router from "next/router";
-import { dedupExchange, fetchExchange, gql, mapExchange } from "urql";
+import { dedupExchange, fetchExchange, mapExchange } from "urql";
 import { isServer } from "..";
 import {
   LoggedInUserDocument,
@@ -8,9 +8,7 @@ import {
   LoginMutation,
   LogoutMutation,
   MutationDeletePostArgs,
-  RegisterMutation,
-  VoteMutation,
-  VoteMutationVariables,
+  RegisterMutation
 } from "../../generated/graphql";
 import { cursorPagination } from "./cursorPagination";
 import { updateCache } from "./updateQuery";
